@@ -16,6 +16,36 @@
 #import <CoreLocation/CoreLocation.h>
 #import "MTLocationDefines.h"
 
+////////////////////////////////////////////////////////////////////////
+#pragma mark - Customize Section
+////////////////////////////////////////////////////////////////////////
+
+// Background images
+#define kMTLocationStatusIdleBackgroundImage						@"MTLocation.bundle/LocateMeButton"
+#define kMTLocationStatusSearchingBackgroundImage					@"MTLocation.bundle/LocateMeButtonTrackingPressed"
+#define kMTLocationStatusRecevingLocationUpdatesBackgroundImage     @"MTLocation.bundle/LocateMeButtonTrackingPressed"
+#define kMTLocationStatusRecevingHeadingUpdatesBackgroundImage      @"MTLocation.bundle/LocateMeButtonTrackingPressed"
+
+// foreground images
+#define kMTLocationStatusIdleImage                      @"MTLocation.bundle/Location"
+#define kMTLocationStatusRecevingLocationUpdatesImage	@"MTLocation.bundle/Location"
+#define kMTLocationStatusRecevingHeadingUpdatesImage	@"MTLocation.bundle/LocationHeading"
+
+// animation durations
+#define kShrinkAnimationDuration            0.25
+#define kExpandAnimationDuration            0.25
+#define kExpandAnimationDelay               0.1
+
+// size & insets
+#define kWidthLandscape                     32.f
+#define kHeightLandscape                    32.f
+
+#define kActivityIndicatorInsetPortrait     6.f
+#define kImageViewInsetPortrait             5.f
+
+#define kActivityIndicatorInsetLandscape    8.f
+#define kImageViewInsetLandscape            6.f
+
 
 @protocol MTLocateMeButtonDelegate;
 
@@ -34,12 +64,19 @@
 @property (nonatomic, strong) UIImage *recevingLocationUpdatesBackgroundImage;
 @property (nonatomic, strong) UIImage *recevingHeadingUpdatesBackgroundImage;
 
+// Icons for states
+@property (nonatomic, strong) UIImage *statusIdleImage;
+@property (nonatomic, strong) UIImage *statusRecevingLocationUpdatesImage;
+@property (nonatomic, strong) UIImage *statusRecevingHeadingUpdatesImage;
+
 /** default to white, only works on iOS 5 and up */
 @property (nonatomic, strong) UIColor *activityIndicatorColor;
 
 - (void)setTrackingMode:(MTUserTrackingMode)trackingMode animated:(BOOL)animated;
 // sets the right frame when used in a UINavigationBar for portrait/landscape
 - (void)setFrameForInterfaceOrientation:(UIInterfaceOrientation)orientation;
+
+- (void)updateUI;
 
 @end
 

@@ -69,7 +69,11 @@
 
 // The designated initializer of the base-class
 - (id)initWithCustomView:(UIView *)customView {
-	return [self initWithTrackingMode:MTUserTrackingModeNone];
+    if ([self isMemberOfClass:[MTLocateMeBarButtonItem class]]) {
+        return [self initWithTrackingMode:MTUserTrackingModeNone];
+    }else{
+        return [super initWithCustomView:customView];
+    }
 }
 
 - (void)dealloc {

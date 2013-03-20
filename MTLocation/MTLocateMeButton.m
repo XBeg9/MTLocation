@@ -14,38 +14,6 @@
 
 #import "MTLocateMeButton.h"
 
-
-////////////////////////////////////////////////////////////////////////
-#pragma mark - Customize Section
-////////////////////////////////////////////////////////////////////////
-
-// Background images
-#define kMTLocationStatusIdleBackgroundImage						@"MTLocation.bundle/LocateMeButton"
-#define kMTLocationStatusSearchingBackgroundImage					@"MTLocation.bundle/LocateMeButtonTrackingPressed"
-#define kMTLocationStatusRecevingLocationUpdatesBackgroundImage     @"MTLocation.bundle/LocateMeButtonTrackingPressed"
-#define kMTLocationStatusRecevingHeadingUpdatesBackgroundImage      @"MTLocation.bundle/LocateMeButtonTrackingPressed"
-
-// foreground images
-#define kMTLocationStatusIdleImage                      @"MTLocation.bundle/Location"
-#define kMTLocationStatusRecevingLocationUpdatesImage	@"MTLocation.bundle/Location"
-#define kMTLocationStatusRecevingHeadingUpdatesImage	@"MTLocation.bundle/LocationHeading"
-
-// animation durations
-#define kShrinkAnimationDuration            0.25
-#define kExpandAnimationDuration            0.25
-#define kExpandAnimationDelay               0.1
-
-// size & insets
-#define kWidthLandscape                     32.f
-#define kHeightLandscape                    32.f
-
-#define kActivityIndicatorInsetPortrait     6.f
-#define kImageViewInsetPortrait             5.f
-
-#define kActivityIndicatorInsetLandscape    8.f
-#define kImageViewInsetLandscape            6.f
-
-
 @interface MTLocateMeButton ()
 
 // Subview: activity indicator is shown during MTLocationStatusSearching
@@ -65,6 +33,15 @@
 
 @implementation MTLocateMeButton
 
+@synthesize idleBackgroundImage = _idleBackgroundImage;
+@synthesize searchingBackgroundImage = _searchingBackgroundImage;
+@synthesize recevingHeadingUpdatesBackgroundImage = _recevingHeadingUpdatesBackgroundImage;
+@synthesize recevingLocationUpdatesBackgroundImage = _recevingLocationUpdatesBackgroundImage;
+
+@synthesize statusIdleImage = _statusIdleImage;
+@synthesize statusRecevingHeadingUpdatesImage = _statusRecevingHeadingUpdatesImage;
+@synthesize statusRecevingLocationUpdatesImage = _statusRecevingLocationUpdatesImage;
+
 ////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Lifecycle, Memory Management
@@ -77,6 +54,10 @@
     _searchingBackgroundImage = [UIImage imageNamed:kMTLocationStatusSearchingBackgroundImage];
     _recevingHeadingUpdatesBackgroundImage = [UIImage imageNamed:kMTLocationStatusRecevingHeadingUpdatesBackgroundImage];
     _recevingLocationUpdatesBackgroundImage = [UIImage imageNamed:kMTLocationStatusRecevingLocationUpdatesBackgroundImage];
+    
+    _statusIdleImage = [UIImage imageNamed:kMTLocationStatusIdleImage];
+    _statusRecevingHeadingUpdatesImage = [UIImage imageNamed:kMTLocationStatusRecevingHeadingUpdatesImage];
+    _statusRecevingLocationUpdatesImage = [UIImage imageNamed:kMTLocationStatusRecevingLocationUpdatesImage];
     
     if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) || UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         buttonSize = _idleBackgroundImage.size;
@@ -101,9 +82,7 @@
 		_activityIndicator.userInteractionEnabled = NO;
         
 		_buttonImageView = [[UIImageView alloc] initWithFrame:_imageViewFrame];
-		_buttonImageView.contentMode = UIViewContentModeScaleAspectFit;
-		_buttonImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
+
 		[self addSubview:_buttonImageView];
         [self addSubview:_activityIndicator];
 		[self addTarget:self action:@selector(trackingModeToggled:) forControlEvents:UIControlEventTouchUpInside];
@@ -249,17 +228,12 @@
 	[UIView commitAnimations];
 }
 
-////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Private Methods
-////////////////////////////////////////////////////////////////////////
-
 - (void)updateUI {
 	switch (self.trackingMode) {
 		case MTUserTrackingModeNone:
 			[self setImage:self.idleBackgroundImage forState:UIControlStateNormal];
 			[self.activityIndicator stopAnimating];
-			self.buttonImageView.image = [UIImage imageNamed:kMTLocationStatusIdleImage];
+			self.buttonImageView.image = _statusIdleImage;
 			self.activeSubview = self.buttonImageView;
 			break;
             
@@ -273,18 +247,23 @@
 		case MTUserTrackingModeFollow:
 			[self setImage:self.recevingLocationUpdatesBackgroundImage forState:UIControlStateNormal];
 			[self.activityIndicator stopAnimating];
-			self.buttonImageView.image = [UIImage imageNamed:kMTLocationStatusRecevingLocationUpdatesImage];
+			self.buttonImageView.image = _statusRecevingLocationUpdatesImage;
 			self.activeSubview = self.buttonImageView;
 			break;
             
 		case MTUserTrackingModeFollowWithHeading:
 			[self setImage:self.recevingHeadingUpdatesBackgroundImage forState:UIControlStateNormal];
 			[self.activityIndicator stopAnimating];
-			self.buttonImageView.image = [UIImage imageNamed:kMTLocationStatusRecevingHeadingUpdatesImage];
+			self.buttonImageView.image = _statusRecevingHeadingUpdatesImage;
 			self.activeSubview = self.buttonImageView;
 			break;
 	}
 }
+
+////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Private Methods
+////////////////////////////////////////////////////////////////////////
 
 // is called when the user taps the button
 - (void)trackingModeToggled:(id)sender {
